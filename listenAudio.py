@@ -2,7 +2,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import wave
-import sys
 
 
 # def reverse(sig: np.ndarray) -> np.ndarray:
@@ -22,10 +21,33 @@ def getNoise():
     raw = wave.open("Ensoniq-ZR-76-01-Dope-77.wav")
     signal = raw.readframes(-1)
     signal = np.frombuffer(signal, dtype="int16")
-    print("noise")
-    print(signal)
+    # print("noise")
+    # print(signal)
+    
+    f_rate = raw.getframerate()
+    
+    time = np.linspace(
+        0,  # start
+        len(signal) / f_rate,
+        num=len(signal)
+    )
+    
+    plt.figure(1)
+    plt.title("Noise")
+    plt.xlabel("Time")
+    print(signal[0:20])
+    # plt.plot(time, -signal, color='red')
+    
     return -signal
 
+
+def correctAns():
+    raw = wave.open("PinkPanther60.wav")
+    signal = raw.readframes(-1)
+    signal = np.frombuffer(signal, dtype="int16")
+    print("correct")
+    print(signal[0])
+    
 
 # shows the sound waves
 def visualize(path: str):
@@ -69,15 +91,33 @@ def visualize(path: str):
     new_arr = []
     i = 0
     rev_noise = getNoise()
-    while i < len(signal):
-        if(i < len(rev_noise)):
-            new_arr.append(signal[i] + -rev_noise[i])
-        i = i + 1
-    plt.plot(time, signal, color='red')
-    new_arr = np.array(new_arr)
-    plt.plot(time, new_arr, color='green')
-    print(type(signal))
-    print(new_arr)
+    
+    rev_noise = np.array(rev_noise)
+    rev_noise = rev_noise.astype(np.int16)
+    print("rev_noise")
+    print(rev_noise[0:20])
+    print("signal")
+    print(signal[0:10])
+    
+    print("first value")
+    print(signal[0] + rev_noise[0])
+    correctAns()
+    
+    
+    
+    # while i < len(signal):
+    #     if(i < len(rev_noise)):
+    #         new_arr.append(signal[i] + -rev_noise[i])
+    #     i = i + 1
+    # plt.plot(time, rev_noise, color='red')
+    new_signal = signal
+    # np.add(new_signal, rev_noise)
+    # signal.setflags(write=1)
+    # for i in range(len(rev_noise)):
+    #     signal[i] = signal[i] + rev_noise[i]
+    plt.plot(time, signal, color='green')
+    # print(type(signal))
+    # print(new_arr)
     # print(new_arr)
     # shows the plot
     # in new window
